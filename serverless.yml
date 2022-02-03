@@ -1,0 +1,21 @@
+service: opensea-trx-parser
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-central-1
+
+functions:
+  hello:
+    handler: src/handler/DecodeTransaction.default
+    events:
+      - http:
+          path: /v1/decode-trx
+          method: post
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin
+
+package:
+  excludeDevDependencies: true

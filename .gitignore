@@ -1,0 +1,16 @@
+# node
+node_modules
+package-lock.json
+
+# yarn
+yarn.lock
+
+# env
+.env
+
+# outDir
+dist/*
+
+# serverless
+.serverless
+.build

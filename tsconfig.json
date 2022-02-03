@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "ES6", // It seems that works better with the import flow
+        "module": "CommonJS",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "paths": {
+            "@src/*": ["./src/*"]
+        },
+    },
+
+    "include": ["./src"]
+}
