@@ -7,7 +7,7 @@ describe('Should return a transaction description from Opensea', () => {
     jest.useFakeTimers('legacy');
     
     return GetTransactionData('0xa52ca3611ad3ea1aa566dd605e24c25b6bc601eabf0969076eebc85df644a1d8', process.env.EtherscanApiKey).then(TrxData => {
-      DecodeTransactionInfo(TrxData.logs).then(res => {
+      DecodeTransactionInfo(TrxData).then(res => {
         expect(res).toEqual({
           Seller: '0xD809BBDe36CB8df835070353EBB515b597211a3B',
           Buyer: '0x2a838fB71A5C6987bf09123CA65841874a663444',

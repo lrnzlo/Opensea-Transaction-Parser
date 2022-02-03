@@ -2,7 +2,10 @@ import { InfuraProvider } from '@ethersproject/providers';
 import {formatEther} from'@ethersproject/units';
 import { Interface } from '@ethersproject/abi';
 import {Contract} from '@ethersproject/contracts';
+import { OpenseaTransactionInfo, ILogs } from './Interface';
 import axios from 'axios';
+import { config } from 'dotenv-safe';
+config();
 
 const provider = new InfuraProvider(
   'mainnet',
@@ -24,16 +27,16 @@ export async function GetABI(EtherscanAPIKEY: string, ContractAddress: string) {
   }
 }
 
-export async function GetTransactionData(TrxHash: string, EtherscanAPIKEY: string) {
+export async function GetTransactionData(TrxHash: string, EtherscanAPIKEY: string): Promise<ILogs[]> {
   try {
     const t_data = await provider.getTransaction(TrxHash);
     const t_logs = (await t_data.wait()).logs.slice(0, 3);
-    const Logs = [];
+    const Logs: ILogs[] = [];
 
     for (const _ of t_logs) {
       const abi = await GetABI(EtherscanAPIKEY, _.address);
       const iface = new Interface(abi);
-      const log = {
+      const log: ILogs = {
         address: _.address,
         topics: _.topics,
         data: _.data,
@@ -43,25 +46,14 @@ export async function GetTransactionData(TrxHash: string, EtherscanAPIKEY: strin
       };
       Logs.push(log);
     }
-    return { data: t_data.data, logs: Logs };
+    return Logs; 
   } catch (error) {
     console.log('Something went wrong getting Transaction.\n', error);
   }
 }
 
-export interface OpenseaTransactionInfo {
-  Seller: string;
-  Buyer: string;
-
-  NftId: string;
-  NftCollection: { Address: string; Name?: string };
-
-  Price: string;
-  Royalty: { val: string; collector: string };
-}
-
 export async function DecodeTransactionInfo(
-  logs: any[]
+  logs: ILogs[]
 ): Promise<OpenseaTransactionInfo> {
   const ContractsERC721 = new Contract(
     logs[2].address,
